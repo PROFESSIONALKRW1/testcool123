@@ -1,6 +1,7 @@
-
+# .github/workflows/gradle.yml
 name: Build Forge 1.16.5
 
+# Запуск при пуше в main и вручную
 on:
   push:
     branches: [ main ]
@@ -9,22 +10,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+      # 1. Чекаут
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2. Дать права на выполнение wrapper
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
+      # 3. Установить Java 8
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: '8'
 
+      # 4. Собрать модуль Forge 1.16.5
       - name: Build Forge module
         run: ./gradlew :loader-forge-fml36:build
 
+      # 5. Залить артефакт (JAR)
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
